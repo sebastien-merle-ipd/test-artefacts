@@ -17,5 +17,8 @@
   "bugs": {
     "url": "https://github.com/sebastien-merle-ipd/test-artefacts/issues"
   },
-  "homepage": "https://github.com/sebastien-merle-ipd/test-artefacts#readme"
+  "homepage": "https://github.com/sebastien-merle-ipd/test-artefacts#readme",
+  "dependencies": {
+    "xlsx": "^0.18.5"
+  }
 }
