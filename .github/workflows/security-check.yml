@@ -20,6 +20,29 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Détection et installation des librairies CDN
+        run: |
+          echo "🔍 Détection des librairies CDN dans les HTML..."
+          found=0
+          grep -rhoiE 'src="https?://[^"]+\.js[^"]*"' \
+            --include="*.html" \
+            --exclude-dir=node_modules . \
+            | sed 's/src="//;s/"//' \
+            | while read url; do
+              libname=$(echo "$url" | grep -oiE '(npm|libs|packages)/([^/@]+)' | head -1 | cut -d'/' -f2)
+              if [ -n "$libname" ]; then
+                echo "📦 Librairie détectée : $libname"
+                echo "   URL : $url"
+                npm install "$libname" --no-save 2>/dev/null \
+                  && echo "✅ $libname installé pour audit" \
+                  || echo "⚠️ $libname introuvable sur npm — vérification manuelle recommandée"
+                found=1
+              fi
+            done
+          if [ $found -eq 0 ]; then
+            echo "ℹ️ Aucune librairie CDN externe détectée."
+          fi
+
       - name: Audit des librairies
         run: |
           echo "🔍 Audit des librairies en cours..."
@@ -32,8 +55,7 @@ jobs:
             echo "👉 Actions requises :"
             echo "   1. Consulter le rapport ci-dessus"
             echo "   2. Mettre à jour la version CDN dans le HTML"
-            echo "   3. Mettre à jour la version dans package.json"
-            echo "   4. Repusher une fois corrigé"
+            echo "   3. Repusher une fois corrigé"
             echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
             exit 1
           )
