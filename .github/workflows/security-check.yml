@@ -1,4 +1,4 @@
-name: Security Audit
+name: Security Audit & Deploy
 
 on:
   push:
@@ -22,3 +22,17 @@ jobs:
 
       - name: Audit des librairies
         run: npm audit --audit-level=high
+
+  deploy:
+    needs: audit
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
