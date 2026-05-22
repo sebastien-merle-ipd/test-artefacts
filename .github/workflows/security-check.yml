@@ -22,19 +22,18 @@ jobs:
 
       - name: Audit des librairies
         run: |
-          echo "🔍 Analyse des librairies en cours..."
+          echo "🔍 Audit des librairies en cours..."
           npm audit --audit-level=high || (
             echo ""
             echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
             echo "❌ DÉPLOIEMENT BLOQUÉ"
-            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-            echo "Une ou plusieurs vulnérabilités HIGH ou"
-            echo "CRITICAL ont été détectées."
+            echo "   Vulnérabilité détectée dans une librairie."
             echo ""
             echo "👉 Actions requises :"
-            echo "   1. Consulter le rapport npm audit ci-dessus"
-            echo "   2. Mettre à jour les librairies concernées"
-            echo "   3. Repusher une fois corrigé"
+            echo "   1. Consulter le rapport ci-dessus"
+            echo "   2. Mettre à jour la version CDN dans le HTML"
+            echo "   3. Mettre à jour la version dans package.json"
+            echo "   4. Repusher une fois corrigé"
             echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
             exit 1
           )
